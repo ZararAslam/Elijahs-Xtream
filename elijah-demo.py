@@ -388,22 +388,15 @@ with st.container():
 # Input section
 st.markdown("---")
 
-# Create columns for better input layout
-col1, col2 = st.columns([6, 1])
-
-with col1:
-    st.text_input(
-        label="Message",
-        placeholder="Type your message here..." + (" (Processing...)" if st.session_state.is_processing else ""),
-        key="user_input",
-        on_change=send_message,
-        label_visibility="collapsed",
-        disabled=st.session_state.is_processing
-    )
-
-with col2:
-    if st.button("📤", help="Send message", disabled=st.session_state.is_processing):
-        send_message()
+# Single column for input without send button
+st.text_input(
+    label="Message",
+    placeholder="Type your message here..." + (" (Processing...)" if st.session_state.is_processing else ""),
+    key="user_input",
+    on_change=send_message,
+    label_visibility="collapsed",
+    disabled=st.session_state.is_processing
+)
 
 # Demo notice
 st.markdown("""
