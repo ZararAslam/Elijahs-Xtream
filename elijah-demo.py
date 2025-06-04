@@ -130,14 +130,44 @@ st.markdown("""
         margin: 8px 0;
     }
     
-    /* Remove extra spacing from bot bubble content */
+    /* Completely reset all spacing in bot bubbles - same as Meraki */
     .bot-bubble * {
-        margin: 0;
-        padding: 0;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1.4 !important;
     }
     
-    .bot-bubble *:last-child {
-        margin-bottom: 0;
+    .bot-bubble h1, .bot-bubble h2, .bot-bubble h3 {
+        color: #1976D2 !important;
+        margin-bottom: 4px !important;
+    }
+    
+    .bot-bubble ul, .bot-bubble ol {
+        padding-left: 20px !important;
+        margin: 4px 0 !important;
+    }
+    
+    .bot-bubble li {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .bot-bubble code {
+        background-color: #F0F0F0 !important;
+        padding: 2px 4px !important;
+        border-radius: 4px !important;
+        font-family: 'Courier New', monospace !important;
+        font-size: 13px !important;
+        color: #1976D2 !important;
+    }
+    
+    .bot-bubble pre {
+        background-color: #F8F8F8 !important;
+        padding: 8px !important;
+        border-radius: 6px !important;
+        border-left: 4px solid #1976D2 !important;
+        overflow-x: auto !important;
+        margin: 4px 0 !important;
     }
     
     /* Timestamp styling */
@@ -357,19 +387,11 @@ with st.container():
                 </div>
             """, unsafe_allow_html=True)
         else:
-            # Convert markdown to HTML for assistant messages
-            try:
-                html_content = markdown2.markdown(
-                    msg['content'], 
-                    extras=['fenced-code-blocks', 'tables', 'code-friendly']
-                )
-            except:
-                html_content = msg['content']
-            
+            # Use plain text for bot messages too, just like user messages and Meraki demo
             st.markdown(f"""
                 <div class="message-container bot-container">
                     <div>
-                        <div class="bot-bubble">{html_content}</div>
+                        <div class="bot-bubble">{msg['content']}</div>
                         <div class="timestamp">{msg.get('timestamp', '')}</div>
                     </div>
                 </div>
