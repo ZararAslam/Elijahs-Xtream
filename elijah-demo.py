@@ -64,6 +64,17 @@ st.markdown("""
         text-align: left;
         white-space: pre-wrap;
         vertical-align: top;
+        margin: 0;
+    }
+    
+    /* Remove extra spacing from user bubble content */
+    .user-bubble * {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .user-bubble *:last-child {
+        margin-bottom: 0;
     }
     
     .bot-bubble {
