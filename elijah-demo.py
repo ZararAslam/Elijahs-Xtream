@@ -6,8 +6,8 @@ from datetime import datetime
 
 # Page configuration
 st.set_page_config(
-    page_title="Elijah's Xtream AI",
-    page_icon="🌶️",
+    page_title="AI Assistant Chat",
+    page_icon="💬",
     layout="wide"
 )
 
@@ -56,10 +56,15 @@ st.markdown("""
         border-radius: 18px 18px 4px 18px;
         max-width: 70%;
         word-wrap: break-word;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         font-size: 14px;
         line-height: 1.4;
         margin-left: auto;
+        display: block;
+        text-align: left;
     }
     
     .bot-bubble {
@@ -69,10 +74,15 @@ st.markdown("""
         border-radius: 18px 18px 18px 4px;
         max-width: 70%;
         word-wrap: break-word;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         font-size: 14px;
         line-height: 1.4;
         border: 1px solid #E0E0E0;
+        display: block;
+        text-align: left;
     }
     
     /* Markdown styling within bot bubbles */
