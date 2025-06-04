@@ -6,8 +6,8 @@ from datetime import datetime
 
 # Page configuration
 st.set_page_config(
-    page_title="AI Assistant Chat",
-    page_icon="💬",
+    page_title="Elijah's Xtream AI",
+    page_icon="🌶️",
     layout="wide"
 )
 
