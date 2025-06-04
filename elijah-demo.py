@@ -1,4 +1,14 @@
-import streamlit as st
+.bot-bubble a {
+        color: #1976D2 !important;
+        text-decoration: underline !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .bot-bubble a:hover {
+        color: #0D47A1 !important;
+        text-decoration: underline !important;
+    }import streamlit as st
 import openai
 import time
 import markdown2
@@ -336,6 +346,14 @@ def get_assistant_response(user_message):
     except Exception as e:
         return f"Sorry, I encountered an error: {str(e)}"
 
+# Function to convert URLs to clickable links
+def convert_urls_to_links(text):
+    import re
+    # Simple regex to find URLs
+    url_pattern = r'(https?://[^\s]+)'
+    # Replace URLs with clickable links
+    return re.sub(url_pattern, r'<a href="\1" target="_blank" style="color: #1976D2; text-decoration: underline;">\1</a>', text)
+
 # Function to send message
 def send_message():
     user_input = st.session_state.user_input.strip()
@@ -387,11 +405,12 @@ with st.container():
                 </div>
             """, unsafe_allow_html=True)
         else:
-            # Use plain text for bot messages too, just like user messages and Meraki demo
+            # Convert URLs to clickable links but keep plain text otherwise
+            content_with_links = convert_urls_to_links(msg['content'])
             st.markdown(f"""
                 <div class="message-container bot-container">
                     <div>
-                        <div class="bot-bubble">{msg['content']}</div>
+                        <div class="bot-bubble">{content_with_links}</div>
                         <div class="timestamp">{msg.get('timestamp', '')}</div>
                     </div>
                 </div>
