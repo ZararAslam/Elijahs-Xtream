@@ -1,14 +1,4 @@
-.bot-bubble a {
-        color: #1976D2 !important;
-        text-decoration: underline !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    
-    .bot-bubble a:hover {
-        color: #0D47A1 !important;
-        text-decoration: underline !important;
-    }import streamlit as st
+import streamlit as st
 import openai
 import time
 import markdown2
@@ -103,7 +93,6 @@ st.markdown("""
         text-align: left;
         white-space: pre-wrap;
         vertical-align: top;
-        margin: 0;
     }
     
     /* Markdown styling within bot bubbles */
@@ -140,44 +129,13 @@ st.markdown("""
         margin: 8px 0;
     }
     
-    /* Completely reset all spacing in bot bubbles - same as Meraki */
+    /* Remove extra spacing from bot bubble content */
     .bot-bubble * {
-        margin: 0 !important;
-        padding: 0 !important;
-        line-height: 1.4 !important;
+        margin-bottom: 0;
     }
     
-    .bot-bubble h1, .bot-bubble h2, .bot-bubble h3 {
-        color: #1976D2 !important;
-        margin-bottom: 4px !important;
-    }
-    
-    .bot-bubble ul, .bot-bubble ol {
-        padding-left: 20px !important;
-        margin: 4px 0 !important;
-    }
-    
-    .bot-bubble li {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    
-    .bot-bubble code {
-        background-color: #F0F0F0 !important;
-        padding: 2px 4px !important;
-        border-radius: 4px !important;
-        font-family: 'Courier New', monospace !important;
-        font-size: 13px !important;
-        color: #1976D2 !important;
-    }
-    
-    .bot-bubble pre {
-        background-color: #F8F8F8 !important;
-        padding: 8px !important;
-        border-radius: 6px !important;
-        border-left: 4px solid #1976D2 !important;
-        overflow-x: auto !important;
-        margin: 4px 0 !important;
+    .bot-bubble *:last-child {
+        margin-bottom: 0;
     }
     
     /* Timestamp styling */
@@ -346,14 +304,6 @@ def get_assistant_response(user_message):
     except Exception as e:
         return f"Sorry, I encountered an error: {str(e)}"
 
-# Function to convert URLs to clickable links
-def convert_urls_to_links(text):
-    import re
-    # Simple regex to find URLs
-    url_pattern = r'(https?://[^\s]+)'
-    # Replace URLs with clickable links
-    return re.sub(url_pattern, r'<a href="\1" target="_blank" style="color: #1976D2; text-decoration: underline;">\1</a>', text)
-
 # Function to send message
 def send_message():
     user_input = st.session_state.user_input.strip()
@@ -405,12 +355,19 @@ with st.container():
                 </div>
             """, unsafe_allow_html=True)
         else:
-            # Convert URLs to clickable links but keep plain text otherwise
-            content_with_links = convert_urls_to_links(msg['content'])
+            # Convert markdown to HTML for assistant messages
+            try:
+                html_content = markdown2.markdown(
+                    msg['content'], 
+                    extras=['fenced-code-blocks', 'tables', 'code-friendly']
+                )
+            except:
+                html_content = msg['content']
+            
             st.markdown(f"""
                 <div class="message-container bot-container">
                     <div>
-                        <div class="bot-bubble">{content_with_links}</div>
+                        <div class="bot-bubble">{html_content}</div>
                         <div class="timestamp">{msg.get('timestamp', '')}</div>
                     </div>
                 </div>
