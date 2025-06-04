@@ -6,8 +6,8 @@ from datetime import datetime
 
 # Page configuration
 st.set_page_config(
-    page_title="AI Assistant Chat",
-    page_icon="💬",
+    page_title="Elijah's Xtream AI",
+    page_icon="🌶️",
     layout="wide"
 )
 
@@ -92,7 +92,8 @@ st.markdown("""
     }
     
     .bot-bubble p {
-        margin: 4px 0;
+        margin: 0;
+        padding: 0;
     }
     
     .bot-bubble ul, .bot-bubble ol {
@@ -115,6 +116,15 @@ st.markdown("""
         border-left: 4px solid #1976D2;
         overflow-x: auto;
         margin: 8px 0;
+    }
+    
+    /* Remove extra spacing from bot bubble content */
+    .bot-bubble * {
+        margin-bottom: 0;
+    }
+    
+    .bot-bubble *:last-child {
+        margin-bottom: 0;
     }
     
     /* Timestamp styling */
@@ -187,6 +197,16 @@ st.markdown("""
         overflow-y: auto;
         padding-right: 10px;
         margin-bottom: 20px;
+        scroll-behavior: smooth;
+    }
+    
+    /* Smoother scrolling for entire page */
+    html {
+        scroll-behavior: smooth;
+    }
+    
+    body {
+        scroll-behavior: smooth;
     }
     
     /* Custom scrollbar */
@@ -306,7 +326,7 @@ def send_message():
     st.session_state.is_processing = False
 
 # Main chat interface
-st.title("💬 AI Assistant Chat")
+st.title("🌶️ Elijah's Xtream AI")
 
 # Chat messages container
 with st.container():
@@ -386,7 +406,7 @@ st.markdown("""
 # Footer
 st.markdown("""
 <div style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
-    Powered by OpenAI Assistants API | Built with Streamlit
+    Powered by ALTORIX
 </div>
 """, unsafe_allow_html=True)
 
