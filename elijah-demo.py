@@ -93,6 +93,7 @@ st.markdown("""
         text-align: left;
         white-space: pre-wrap;
         vertical-align: top;
+        margin: 0;
     }
     
     /* Markdown styling within bot bubbles */
@@ -131,7 +132,8 @@ st.markdown("""
     
     /* Remove extra spacing from bot bubble content */
     .bot-bubble * {
-        margin-bottom: 0;
+        margin: 0;
+        padding: 0;
     }
     
     .bot-bubble *:last-child {
