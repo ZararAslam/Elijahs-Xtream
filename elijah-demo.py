@@ -6,8 +6,8 @@ from datetime import datetime
 
 # Page configuration
 st.set_page_config(
-    page_title="AI Assistant Chat",
-    page_icon="💬",
+    page_title="Elijah's Xtream AI",
+    page_icon="🌶️",
     layout="wide"
 )
 
@@ -27,11 +27,48 @@ st.markdown("""
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
+    /* Full height layout */
+    .main .block-container {
+        padding-top: 1rem;
+        padding-bottom: 0rem;
+        max-width: none;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    
     /* Chat container styling */
     .chat-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
         max-width: 800px;
         margin: 0 auto;
+        width: 100%;
+    }
+    
+    /* Chat messages area */
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
         padding: 20px;
+        margin-bottom: 0;
+    }
+    
+    /* Input container fixed at bottom */
+    .input-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+        padding: 15px 20px;
+        z-index: 1000;
+        max-width: 800px;
+        margin: 0 auto;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
     }
     
     /* Message bubbles */
@@ -39,14 +76,19 @@ st.markdown("""
         margin: 10px 0;
         display: flex;
         align-items: flex-end;
+        clear: both;
     }
     
     .user-container {
         justify-content: flex-end;
+        float: right;
+        width: 100%;
     }
     
     .bot-container {
         justify-content: flex-start;
+        float: left;
+        width: 100%;
     }
     
     .user-bubble {
@@ -59,7 +101,8 @@ st.markdown("""
         box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         font-size: 14px;
         line-height: 1.4;
-        margin-left: auto;
+        display: inline-block;
+        text-align: left;
     }
     
     .bot-bubble {
@@ -73,6 +116,8 @@ st.markdown("""
         font-size: 14px;
         line-height: 1.4;
         border: 1px solid #E0E0E0;
+        display: inline-block;
+        text-align: left;
     }
     
     /* Markdown styling within bot bubbles */
@@ -152,18 +197,22 @@ st.markdown("""
     
     /* Typing indicator */
     .typing-indicator {
+        margin: 10px 0;
         display: flex;
         justify-content: flex-start;
-        margin: 10px 0;
+        clear: both;
     }
     
     .typing-bubble {
-        background-color: #F0F0F0;
+        background-color: #FFFFFF;
+        border: 1px solid #E0E0E0;
         border-radius: 18px 18px 18px 4px;
         padding: 12px 16px;
         color: #666;
         font-style: italic;
         animation: pulse 1.5s ease-in-out infinite;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        max-width: 200px;
     }
     
     @keyframes pulse {
@@ -172,13 +221,7 @@ st.markdown("""
         100% { opacity: 0.6; }
     }
     
-    /* Scrollable chat area */
-    .chat-messages {
-        max-height: 60vh;
-        overflow-y: auto;
-        padding-right: 10px;
-        margin-bottom: 20px;
-    }
+    /* Remove old scrollable chat area styles */
     
     /* Custom scrollbar */
     .chat-messages::-webkit-scrollbar {
@@ -197,6 +240,11 @@ st.markdown("""
     
     .chat-messages::-webkit-scrollbar-thumb:hover {
         background: #A0A0A0;
+    }
+    
+    /* Add padding bottom to make room for fixed input */
+    body {
+        padding-bottom: 100px;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -270,7 +318,7 @@ def send_message():
     if not user_input or st.session_state.is_processing:
         return
     
-    # Add user message to chat
+    # Add user message to chat immediately
     timestamp = datetime.now().strftime("%H:%M")
     st.session_state.messages.append({
         "role": "user", 
@@ -278,29 +326,43 @@ def send_message():
         "timestamp": timestamp
     })
     
-    # Set processing state
-    st.session_state.is_processing = True
+    # Clear input and set processing state
     st.session_state.user_input = ""
+    st.session_state.is_processing = True
     
-    # Get assistant response
-    assistant_response = get_assistant_response(user_input)
-    
-    # Add assistant response to chat
-    timestamp = datetime.now().strftime("%H:%M")
-    st.session_state.messages.append({
-        "role": "assistant", 
-        "content": assistant_response,
-        "timestamp": timestamp
-    })
-    
-    # Reset processing state
-    st.session_state.is_processing = False
+    # Force rerun to show user message immediately
+    st.rerun()
+
+# Function to get assistant response (called separately)
+def process_assistant_response():
+    if st.session_state.is_processing and len(st.session_state.messages) > 0 and st.session_state.messages[-1]["role"] == "user":
+        user_message = st.session_state.messages[-1]["content"]
+        
+        # Get assistant response
+        assistant_response = get_assistant_response(user_message)
+        
+        # Add assistant response to chat
+        timestamp = datetime.now().strftime("%H:%M")
+        st.session_state.messages.append({
+            "role": "assistant", 
+            "content": assistant_response,
+            "timestamp": timestamp
+        })
+        
+        # Reset processing state
+        st.session_state.is_processing = False
+        st.rerun()
 
 # Main chat interface
-st.title("💬 AI Assistant Chat")
+st.title("🌶️ Elijah's Xtream AI")
+
+# Process assistant response if needed
+if st.session_state.is_processing:
+    process_assistant_response()
 
 # Chat messages container
 with st.container():
+    st.markdown('<div class="chat-container">', unsafe_allow_html=True)
     st.markdown('<div class="chat-messages">', unsafe_allow_html=True)
     
     # Display chat history
@@ -344,9 +406,10 @@ with st.container():
         """, unsafe_allow_html=True)
     
     st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# Input section
-st.markdown("---")
+# Input section - Fixed at bottom
+st.markdown('<div class="input-container">', unsafe_allow_html=True)
 
 # Create columns for better input layout
 col1, col2 = st.columns([6, 1])
@@ -365,6 +428,8 @@ with col2:
     if st.button("📤", help="Send message", disabled=st.session_state.is_processing):
         send_message()
 
+st.markdown('</div>', unsafe_allow_html=True)
+
 # Demo notice
 st.markdown("""
 <div class="demo-notice">
@@ -381,15 +446,19 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Auto-scroll to bottom (JavaScript injection)
+# Auto-scroll to bottom when new messages are added
 if st.session_state.messages:
     st.markdown("""
         <script>
-        setTimeout(function() {
-            var chatMessages = document.querySelector('.chat-messages');
-            if (chatMessages) {
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
-        }, 100);
+        function scrollToBottom() {
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+        
+        // Scroll immediately
+        scrollToBottom();
+        
+        // Also scroll after a short delay to handle dynamic content
+        setTimeout(scrollToBottom, 100);
+        setTimeout(scrollToBottom, 300);
         </script>
     """, unsafe_allow_html=True)
