@@ -391,7 +391,7 @@ st.markdown("---")
 # Single column for input without send button
 st.text_input(
     label="Message",
-    placeholder="Ask me anything Elijah's Xtream products..." + (" (Processing...)" if st.session_state.is_processing else ""),
+    placeholder="Ask me anything about Elijah's Xtream products..." + (" (Processing...)" if st.session_state.is_processing else ""),
     key="user_input",
     on_change=send_message,
     label_visibility="collapsed",
